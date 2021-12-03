@@ -1,19 +1,21 @@
-import React, {useState, useContext} from "react"
+import React, {useState, useContext, useEffect} from "react"
 import {Modal, Form, Button, Container, NavLink, Nav} from "react-bootstrap"
-import {createGroup} from "../../http/reviewAPI"
+import {createGroup, fetchGroups} from "../../http/reviewAPI"
 import {Context} from "../../index";
 
-const CreateGroup = ({show, onHide, onToggle}) => {
+const CreateGroup = ({show, onHide}) => {
 
 	const {review} = useContext(Context)
 
 	const [value, setValue] = useState('') 
-
+	// useEffect(() => {
+  //   fetchGroups().then(data => review.setGroups(data))
+	// }, [review.groups]) // panic!!!
 	const addGroup = () => {
-		createGroup({name: value}).then(data => {
+		createGroup({name: value}).then(() => {
+			fetchGroups().then(data => review.setGroups(data))
 			setValue('')
 			onHide()
-			ontoggle()
   	})
 	}	
 	return (
@@ -37,7 +39,8 @@ const CreateGroup = ({show, onHide, onToggle}) => {
 				<Button 
 					variant="outline-success" 
 					onClick={addGroup}>
-						<Nav.Link href="/user_page">Add group</Nav.Link>
+						{/* <Nav.Link href="/user_page">Add group</Nav.Link> */}
+						Add Group
 					</Button>
 			</Modal.Footer>
 		</Modal>

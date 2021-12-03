@@ -3,6 +3,7 @@ const {DataTypes} = require('sequelize')
 
 const User = sequelize.define('user', {
   id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+  name: {type: DataTypes.STRING},
   email: {type: DataTypes.STRING, unique: true,},
   password: {type: DataTypes.STRING},
   role: {type: DataTypes.STRING, defaultValue: "USER"}
@@ -37,7 +38,7 @@ const Image = sequelize.define('image', {
 	order: {type: DataTypes.INTEGER, allowNull: false},
 	link: {type: DataTypes.STRING, allowNull: false}
 })
-const ReviwTag = sequelize.define('review_tag', {
+const ReviewTag = sequelize.define('review_tag', {
 	id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
 })
 
@@ -70,8 +71,8 @@ Like.belongsTo(Review)
 Review.hasMany(Image)
 Image.belongsTo(Review)
 
-Review.belongsToMany(Tag, {through: ReviwTag })
-Tag.belongsToMany(Review, {through: ReviwTag })
+Review.belongsToMany(Tag, {through: ReviewTag })
+Tag.belongsToMany(Review, {through: ReviewTag })
 
 
 module.exports = {

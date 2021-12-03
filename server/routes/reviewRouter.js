@@ -8,13 +8,10 @@ router.post('/', async (req, res) => {
 	return res.json(review)
 })
 router.get('/', async (req, res) => {
-	let {groupId, userId} = req.query //, limit, page
-  //page = page || 1
-  //limit = limit || 9
-  //let offset = page * limit - limit
+	let {groupId, userId} = req.query 
   let reviews
   if (!groupId && !userId) {
-    reviews = await Review.findAll() //AndCount {limit, offset}
+    reviews = await Review.findAll()
   }
   if (groupId && !userId) {
     reviews = await Review.findAll({where:{groupId}})
@@ -42,6 +39,7 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
 	const {id} = req.params
 	await Review.destroy({where: {id}})
+  return res.json({})
 })
 
 module.exports = router

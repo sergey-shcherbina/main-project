@@ -23,6 +23,7 @@ app.use('/rating', require('./routes/ratingRouter'))
 app.use('/like', require('./routes/likeRouter'))
 app.use('/tag', require('./routes/tagRouter'))
 app.use('/image', require('./routes/imageRouter'))
+// app.use("/review_tag", require("./routes/reviewTagRouter"))
 
 const start = async () => {
     try {

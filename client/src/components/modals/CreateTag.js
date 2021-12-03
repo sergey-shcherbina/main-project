@@ -1,14 +1,16 @@
-import React, {useState} from "react"
+import React, {useState, useContext} from "react"
 import {Modal, Form, Button, Container} from "react-bootstrap"
-import {createTag} from "../../http/reviewAPI"
+import {createTag, fetchTags} from "../../http/reviewAPI"
+import {Context} from "../../index"
 
 const CreateTag = ({show, onHide}) => {
-
-	const [value, setValue] = useState('') 
+	const {review} = useContext(Context)
+	const [value, setValue] = useState("") 
 
 	const addTag = () => {
-		createTag({word: value}).then(data => {
-			setValue('')
+		createTag({word: value}).then(() => {
+			fetchTags().then(data => review.setTags(data))
+			setValue("")
 			onHide()
   	})
 	}	

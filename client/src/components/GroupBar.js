@@ -8,13 +8,13 @@ const GroupsBar = observer(() => {
 	return (
 		<Row className="d-flex flex-column align-items-center">
       <h2>Groups:</h2>
-      <ListGroup style={{overflow: "auto", height: "52vh", maxWidth: "30vw"}}>
+      <ListGroup style={{overflow: "auto", height: "64.5vh", maxWidth: "30vw"}}>
       
       {review.groups.map(group =>
         <ListGroup.Item  
           key={group.id}
           active={group.id === review.selectedGroup.id}
-          style={{cursor: 'pointer', marginTop: 2}}
+          style={{cursor: "pointer", marginTop: 2}}
           onClick={() => review.setSelectedGroup(group)}
         >
           {group.name}

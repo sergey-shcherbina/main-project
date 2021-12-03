@@ -1,6 +1,6 @@
-import React, {useState} from 'react'
-import {Modal, Form, Button, Container} from 'react-bootstrap'
-import { TagCloud } from 'react-tagcloud'
+import React, {useState} from "react"
+import {Modal, Form, Button, Container} from "react-bootstrap"
+import {TagCloud} from "react-tagcloud"
 
 const Searchmodal = ({show, onHide, tag, data}) => {
   const [value, setValue] = useState("") 

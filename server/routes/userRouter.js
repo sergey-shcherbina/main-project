@@ -14,7 +14,7 @@ const generateJwt = (id, email, role) => {
 
 //userController.registration
 router.post('/registration', async (req, res) => {  //(req, res, next)
-	const {email, password, role} = req.body
+	const {email, password, role, name} = req.body
   if (!email || !password) {
     return res.status(404).json({message: 'Некорректный email или password'})  //next(ApiError.badRequest('Некорректный email или password'))Not correct email or password
   }
@@ -24,7 +24,7 @@ router.post('/registration', async (req, res) => {  //(req, res, next)
 			//return next(res.status(404).json({message: 'Пользователь с таким email уже существует'}))
 	}
 	const hashPassword = await bcrypt.hash(password, 5)
-	const user = await User.create({email, role, password: hashPassword})
+	const user = await User.create({email, name, role, password: hashPassword})
 		//const userPage =   //const basket = await Basket.create({userId: user.id})
 	const token = generateJwt(user.id, user.email, user.role)
 
@@ -59,7 +59,7 @@ router.get('/auth',
       next()
     }
     try {
-      const token = req.headers.authorization.split(' ')[1] // Bearer asfasnfkajsfnjk
+      const token = req.headers.authorization.split(' ')[1] // Bearer token
       if (!token) {
         return res.status(401).json({message: "Пользователь не авторизован"})
       }
@@ -75,6 +75,12 @@ router.get('/auth',
 	  return res.json({token})
   }
 ) 
+
+
+router.get("/", async (req, res) => {
+  const users = await User.findAll()
+  return res.json(users)
+})
 
 //checkRoleMiddleware
 

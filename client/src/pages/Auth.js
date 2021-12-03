@@ -1,33 +1,35 @@
-import React, {useContext, useState} from 'react';
-import {Container, Form, Button, Card, Row} from "react-bootstrap";
-import {NavLink, useLocation, useNavigate} from "react-router-dom";
-import {login, registration} from "../http/userAPI";
-import {observer} from "mobx-react-lite";
-import { Context } from '..';
+import React, {useContext, useState} from 'react'
+import {Container, Form, Button, Card, Row} from "react-bootstrap"
+import {NavLink, useLocation, useNavigate} from "react-router-dom"
+import {login, registration} from "../http/userAPI"
+import {observer} from "mobx-react-lite"
+import { Context } from '..'
 
 const Auth = observer(() => {
 	const {user} = useContext(Context)
-	const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+	console.log(user)
+	const [name, setName] = useState("")
+	const [email, setEmail] = useState("")
+ const [password, setPassword] = useState("")
 	const location = useLocation()
-	const isLogin = location.pathname === '/login'
+	const isLogin = location.pathname === "/login"
 	const navigate = useNavigate()
 
-	const click = async () => {
-		try {
+	const signUser = async () => {
+		 try {
 			let data;
 			if (isLogin) {
-				data = await login(email, password);
+				data = await login(email, password)
 				console.log(data)
 			} else {
-				data = await registration(email, password);
+				data = await registration (email, password, name)
 				console.log(data)
 			}
 			user.setUser(user)
 			user.setIsAuth(true)
 			navigate('/')
-		} catch (err) {
-			alert(err.response.data.message)
+		 } catch (err) {
+		 	alert(err.response.data.message)
 		}
 	}
 								console.log(location.pathname)
@@ -36,11 +38,22 @@ const Auth = observer(() => {
 
 
 	let rus = true
+
+
 	return (
 		<Container className="d-flex justify-content-center align-items-center">
 			<Card style={{width: 600, border: 'none', marginTop: '5%'}} className="p-5">
 				<h1 className="m-auto">{isLogin ? 'Авторизация' : "Регистрация"}</h1>
 				<Form className="d-flex flex-column mt-3">
+    {!isLogin &&
+						<Form.Control
+							className="mt-3"
+							style={{border: 'none', borderBottom: '1px solid'}}
+							placeholder="Enter fullname..."
+							value={name}
+							onChange={event => setName(event.target.value)}
+						/>
+					}		
 					<Form.Control
 						className="mt-3"
 						style={{border: 'none', borderBottom: '1px solid'}}
@@ -70,7 +83,7 @@ const Auth = observer(() => {
 						<Button
 							variant={"outline-secondary"}
 							className="mt-4"
-							onClick={click}
+							onClick={signUser}
 						>
 							{rus ?  isLogin ? 'Вход' : 'Регистрация' : isLogin ? 'Log in' : 'Sign in'}
 						</Button>

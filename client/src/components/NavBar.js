@@ -3,7 +3,7 @@ import {Context} from "..";
 import {Navbar, Nav, Button,Container} from "react-bootstrap";
 import {NavLink} from "react-router-dom";
 import {observer} from "mobx-react-lite";
-import {useNavigate} from 'react-router-dom'
+import {useNavigate} from "react-router-dom"
 import Searchmodal from "./modals/Searchmodal"
 
 const NavBar = observer(() => {
@@ -27,8 +27,9 @@ const NavBar = observer(() => {
         <Container>
           {/* <Button variant="outline-primary" style={{border: "none"}}>dark</Button>
           <Button variant="outline-primary" style={{border: "none"}}>en ru</Button> */}
-          <NavLink to={"/"}>Main page</NavLink>
-          <Nav.Link href="/user_page">Own page</Nav.Link>
+          {/* <NavLink to={"/"}>Main page</NavLink> */}
+          <Nav.Link href="/">Main page</Nav.Link>
+          <Nav.Link href="/user_page">My page</Nav.Link>
           <Button
             variant="outline-primary"
             style={{border: "none", fontSize: 20}}
@@ -41,7 +42,7 @@ const NavBar = observer(() => {
               <Button
                 style={{border: "none"}}
                 variant="outline-primary"
-                onClick={() => navigate('/admin')}
+                onClick={() => navigate("/admin")}
               >
                 Admin panel
               </Button>

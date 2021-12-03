@@ -8,9 +8,35 @@ router.post('/', async (req, res) => {
 	return res.json(comment)
 })
 router.get('/', async (req, res) => {
-	const {userId, reviewId} = req.query
-	const comments = await Rate.findAll({where:{reviewId, userId}})
-	return res.json(comments)
+  let {userId, reviewId} = req.query
+  let lcomments
+  if (!userId && !reviewId) {
+    comments = await Comment.findAll()
+  }
+  if (userId && !reviewId) {
+    comments = await Comment.findAll({where:{userId}})
+  }
+  if (!userId && reviewId) {
+    comments = await Comment.findAll({where:{reviewId}})
+  }
+  if (!userId && reviewId) {
+    comments = await Comment.findOne({where:{reviewId, userId}})
+  }
+  return res.json(comments)
 })
+// router.get('/', async (req, res) => {
+// 	const {userId, reviewId} = req.query
+// 	const comment = await Comment.findOne({where:{reviewId, userId}})
+// 	return res.json(comment)
+// })
+// router.get('/', async (req, res) => {
+// 	const {reviewId} = req.query
+// 	const comments = await Comment.findAll({where:{reviewId}})
+// 	return res.json(comments)
+// })
+// router.get('/', async (req, res) => {
+// 	const comments = await Comment.findAll()
+// 	return res.json(comments)
+// })
 
 module.exports = router 
