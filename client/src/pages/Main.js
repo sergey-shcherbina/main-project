@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from "react"
 import {Container, Dropdown} from "react-bootstrap"
 import {TagCloud} from "react-tagcloud"
-import {fetchGroups, fetchReviews, fetchTags, fetchComments, fetchLikes, fetchRatings} from "../http/reviewAPI"
+import {fetchGroups, fetchReviews, fetchTags, fetchComments, fetchLikes, fetchRatings, fetchImages} from "../http/reviewAPI"
 import {fetchUsers} from "../http/userAPI"
 import {observer} from "mobx-react-lite"
 import {Context} from "../index"
@@ -15,6 +15,7 @@ const Main = observer(() => {
   const {review, user} = useContext(Context)
   const navigate = useNavigate()
   const [searchVisible, setSearchVisible] = useState(false)
+  // const [copy, setCopy] = useState(null)
   const [tag, setTag] = useState("")
 
 	useEffect(() => {
@@ -25,17 +26,22 @@ const Main = observer(() => {
     fetchComments().then(data => review.setComments(data))
     fetchLikes().then(data => review.setLikes(data))
     fetchRatings().then(data => review.setRatings(data))
+    fetchImages().then(data => review.setImages(data))
   }, [])
-  console.log(review.likes)
-  console.log(review.ratings)
-  console.log(review.comments)
-  const copyLast = review.reviews.slice(0).sort((a,b) => {
-    let dA = new Date(a.createdAt).getTime(), dB = new Date(b.createdAt).getTime()
-    return dB - dA})
-  const copyRate = review.reviews.slice(0)
+  // const revCopy = [...review.reviews]
+  let revCopy = Object.assign([], review.reviews)
+  console.log(review.selectedGroup)
+  if (review.selectedGroup.id) {
+    revCopy = revCopy.filter(rev => rev.groupId === review.selectedGroup.id)
+  } 
+  let rateCopy = Object.assign([], revCopy)
+  // let revC = [...revCopy]
+  rateCopy.map(rev => {rev.rating = (review.ratings.length && review.ratings.filter(rt => rt.reviewId === rev.id)
+    .reduce((res, elem) => res + elem.rate, 0)/review.ratings.filter(rt => rt.reviewId === rev.id).length)})
+  const copyRate = revCopy.sort(function(a, b) {return b.rating - a.rating})
   const drop =
-		<Dropdown drop="end">
-			<Dropdown.Toggle variant="outline-light" style={{border: "none"}} />
+		<Dropdown drop= "end">
+			<Dropdown.Toggle variant="outline-light" size = "lg" style={{border: "none"}} />
 			<Dropdown.Menu>
         <Dropdown.Item
          onClick={() => navigate("/review/" + review.selectedReview.id)}
@@ -48,21 +54,35 @@ const Main = observer(() => {
   let dataTags = []
   review.tags.forEach(tag => dataTags.push({value: tag.word, count: Math.floor(Math.random() * 100)}))
 
-      console.log(dataTags)
+      // console.log(dataTags)
 
   return (
     <div className="d-flex flex-column align-items-center">  
-      <Container className="d-flex mt-3" style={{maxHeight: "71vh", justifyContent: "center"}}>
+      <Container className="d-flex mt-3 justify-content-center">
         <GroupBar />
         <div className="d-flex flex-column align-items-center" style={{width: "70vw"}}>
           <Container className="d-flex justify-content-center"><h2>Latest reviews:</h2></Container>
-          <ListReviews copy={copyLast} drop={drop} w="70vw" h="28.5vh"/>
+          <ListReviews 
+            copy={revCopy.sort((a,b) => {
+              let dA = new Date(a.createdAt).getTime(), dB = new Date(b.createdAt).getTime()
+              return dB - dA
+            })} 
+            drop={drop} 
+            w="70vw" 
+            h="23vh"
+          />
           <Container className="d-flex justify-content-center mt-2"><h2>Rating reviews:</h2></Container> 
-          <ListReviews copy={copyRate} drop={drop} w="70vw" h="28.5vh" />  
+          <ListReviews 
+            copy={rateCopy.sort((a, b) => b.rating - a.rating)} 
+            drop={drop} 
+            w="70vw" 
+            h="23vh" 
+          />  
         </div>
       </Container>
-      <Container style={{overflow: "auto", maxHeight: "20vh"}}>
+      <Container style={{overflow: "auto", maxHeight: "30vh", marginTop: "-10vh"}}>
         <TagCloud
+          key={Date.now}
           minSize={25}
           maxSize={45}
           tags={dataTags}

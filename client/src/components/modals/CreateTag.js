@@ -6,9 +6,9 @@ import {Context} from "../../index"
 const CreateTag = ({show, onHide}) => {
 	const {review} = useContext(Context)
 	const [value, setValue] = useState("") 
-
+	console.log(review.selectedReview.id)
 	const addTag = () => {
-		createTag({word: value}).then(() => {
+		createTag({word: value, reviewId: review.selectedReview.id}).then(() => {
 			fetchTags().then(data => review.setTags(data))
 			setValue("")
 			onHide()

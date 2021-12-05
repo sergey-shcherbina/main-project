@@ -8,6 +8,7 @@ export default class reviewStore {
 		this._comments = []
 		this._likes = []
 		this._ratings = []
+		this._images = []
 		this._selectedGroup = {}
 		this._selectedReview = {}
 		makeAutoObservable(this)
@@ -29,6 +30,9 @@ export default class reviewStore {
 	}
 	setRatings(ratings) {
 		this._ratings = ratings
+	}
+	setImages(images) {
+		this._images = images
 	}
 	setSelectedGroup(group) {
 		this._selectedGroup = group
@@ -53,6 +57,9 @@ export default class reviewStore {
 	}
 	get ratings() {
 		return this._ratings
+	}
+	get images() {
+		return this._images
 	}
 	get selectedGroup() {
 		return this._selectedGroup

@@ -3,7 +3,6 @@ import {Modal, Form, Button, Container, Dropdown, Row} from "react-bootstrap"
 import {Context} from "../../index"
 import CreateGroup from "./CreateGroup"
 import CreateTag from "./CreateTag"
-import ShowTags from "./ShowTags"
 import jwt_decode from "jwt-decode"
 import {observer} from "mobx-react-lite"
 import {editReview, removeReview, fetchReviews, fetchOneReview} from "../../http/reviewAPI"
@@ -13,25 +12,23 @@ const EditReview = observer(({show, onHide}) => {
 	const {review} = useContext(Context)
 	let userData = jwt_decode(localStorage.getItem("token"))
 	
-	console.log(review.selectedReview.name)
-	console.log(review.selectedReview.text)
-	console.log(review.selectedReview.authorRate)
+	// console.log(review.selectedReview.name)
+	// console.log(review.selectedReview.text)
+	// console.log(review.selectedReview.authorRate)
 	
 	
 	const [groupVisible, setGroupVisible] = useState(false)
 	const [tagVisible, setTagVisible] = useState(false)
-	const [tagsVisible, setTagsVisible] = useState(false)
 	
 	let dataTags = []
   review.tags.forEach(tag => dataTags.push({value: tag.word, count: Math.floor(Math.random() * 100)}))
 
 	
-	console.log(userData, review.selectedGroup.id)
+	 console.log(userData, review.selectedGroup.id)
 
 	const addChanges = () => {
 		editReview(review.selectedReview.id, {name: review.selectedReview.name, text: review.selectedReview.text, 
 			authorRate: review.selectedReview.authorRate, groupId: review.selectedGroup.id}).then(() => {
-			// fetchOneReview(review.selectedReview.id).then(data => review.setSelectedReview(data))
 			fetchReviews().then(data => review.setReviews(data))
 			onHide()
 		})
@@ -43,7 +40,8 @@ const EditReview = observer(({show, onHide}) => {
 			onHide()
 		})
 	}
-	console.log(review.selectedReview)		
+
+	// console.log(review.selectedReview)		
  
 	return (
 		<Container>
@@ -56,11 +54,11 @@ const EditReview = observer(({show, onHide}) => {
 				<Modal.Body>
 					<Form>
 						<div className="d-flex">
-							<div className="d-flex flex-column" style={{width:"7vw", justifyContent: "space-around"}}>
+							<div className="d-flex flex-column" style={{width:"10vw", justifyContent: "space-around"}}>
 								<Dropdown drop="end">
 									<Dropdown.Toggle 
 										variant="outline-primary" 
-										style={{border: "none", width: "7vw"}}
+										style={{border: "none", width: "8vw"}}
 									>
 										{review.selectedGroup.name || "Group?"} 
 									</Dropdown.Toggle>
@@ -77,18 +75,17 @@ const EditReview = observer(({show, onHide}) => {
 								</Dropdown>
 								<Button
 									variant="outline-primary" 
-									style={{border:"none", width: "6vw"}}
+									style={{border:"none", width: "7vw"}}
 									onClick={() => setGroupVisible(true)}
 								>
-									Create group
+									Add group
 								</Button>
 								<Dropdown drop="end">
 									<Dropdown.Toggle 
 										variant="outline-primary" 
-										style={{border: "none"}}
+										style={{border: "none",width: "6vw"}}
 									>
-										{/* {review.selectedReview.authorRate || "Rate?"} */}
-										Rate
+										{review.selectedReview.authorRate || "Rating"}
 									</Dropdown.Toggle>
 									<Dropdown.Menu>
 										{[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(rate =>
@@ -101,40 +98,33 @@ const EditReview = observer(({show, onHide}) => {
 										)}
 									</Dropdown.Menu>
 								</Dropdown>
-								<Button  
-									variant="outline-primary" 
-									style={{border:"none", width: "6vw"}}
-									onClick={() => setTagsVisible(true)}
-								>
-									Add tag	
-								</Button>
 								<Button
 									variant="outline-primary" 
 									style={{border:"none", width: "6vw"}}
 									onClick={() => setTagVisible(true)}
 								>
-									Create tag
+									Add tag
 								</Button>
-								<Button
+								{/* <Button
 									variant="outline-primary" 
 									style={{border:"none", width: "6vw"}}
-									// onClick={() => setGroupVisible(true)}
+									onClick={() => setImageVisible(true)}
 								>
 									Add image
-								</Button>
+								</Button> */}
 							</div> 
 							<div style={{width: "80vw"}}>
 								<Form.Control
 									value={review.selectedReview.name}
 									onChange={event => review.setSelectedReview({...review.selectedReview, ...{name: event.target.value}})}
-									placeholder={"Review title?"}
+									placeholder="Review title?"
 								/>	
 								<Form.Control
 									style={{height: '60vh', marginTop: 5}}
 									as="textarea"
 									value={review.selectedReview.text}
 									onChange={event => review.setSelectedReview({...review.selectedReview, ...{text: event.target.value}})}
-									placeholder={"What do you think?"}
+									placeholder="What do you think?"
 								/>
 							</div>		
 						</div>
@@ -156,7 +146,6 @@ const EditReview = observer(({show, onHide}) => {
 			</Modal>
 			<CreateGroup show={groupVisible} onHide={() => setGroupVisible(false)} />
 			<CreateTag show={tagVisible} onHide={() => setTagVisible(false)} />
-			<ShowTags show={tagsVisible} onHide={() => setTagsVisible(false)} />
 		</Container>
   )
 })  

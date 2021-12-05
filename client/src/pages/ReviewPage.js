@@ -9,44 +9,60 @@ import jwt_decode from "jwt-decode"
 import {fetchLikes, createLike, fetchRatings, createRating} from "../http/reviewAPI"
 
 const ReviewPage = observer(() => {
-  // const [likes, setLikes] = useState([])
-  const [like,setLike] = useState(null)
-  const [rating,setRating] = useState(null)
   const userData = jwt_decode(localStorage.getItem("token"))
   const {review, user} = useContext(Context)
 
-  // console.log(review.likes.map(com => console.log(com.userId)))
-  
+	const likes = review.reviews.filter(rev => rev.userId === user.users.reduce((res, one) => one.id === review.selectedReview.userId ? one.id : res, 0)).
+	map(rvw => review.likes.filter(like => like.reviewId === rvw.id).length).reduce((sum,elem) => sum + elem, 0)
+
+	const rating = (review.ratings.length && review.ratings.filter(rt => rt.reviewId === review.selectedReview.id)
+	.reduce((res, elem) => res + elem.rate, 0)/review.ratings.filter(rt => rt.reviewId === review.selectedReview.id).length).toFixed(2)
+	
+	
+	console.log(!review.likes.filter(like => like.reviewId === review.selectedReview.id).filter(lk => lk.userId === userData.id).length)
+	console.log(review.ratings.length && review.ratings.filter(rt => rt.reviewId === review.selectedReview.id))
+  console.log(review.ratings.filter(rate => rate.reviewId === review.selectedReview.id).filter(rt => rt.userId === userData.id).length === 0)
 
   const addLike = () => {
-    fetchLikes(review.selectedReview.id, userData.id).then(data => 
-       setLike(data)
-    )
-    console.log(like)
-    if (!like) { 
-      createLike({reviewId: review.selectedReview.id, userId: userData.id})
-    }
-      // .then(() => {
-      //   fetchLikes().then(data => setLikes(data))
-      // }) 
-    
+    !review.likes.filter(like => like.reviewId === review.selectedReview.id).filter(lk => lk.userId === userData.id).length  && 
+    createLike({reviewId: review.selectedReview.id, userId: userData.id}).then(data => fetchLikes().then(data => review.setLikes(data)))
   }
-  console.log(review.selectedReview.id)
-  console.log(userData.id)
   const addRating = (rate) => {
-    fetchRatings(review.selectedReview.id, userData.id).then(data => { 
-      setRating(data)
-      !rating && createRating({rate, reviewId: review.selectedReview.id, userId: userData.id})
-      // .then(data => setRating(data))
-    })
+		review.ratings.filter(rate => rate.reviewId === review.selectedReview.id).filter(rt => rt.userId === userData.id).length === 0 && 
+	  createRating({rate, reviewId: review.selectedReview.id, userId: userData.id}).then(() => fetchRatings().then(data => review.setRatings(data)))
   }
+	console.log(review.images.filter(rev => rev.reviewId === review.selectedReview.id)) 
+	const imgs = review.images.filter(rev => rev.reviewId === review.selectedReview.id).map(image => 
+		// console.log(im.img)
+		<Image key={image.id} width={150} height={200} src={process.env.REACT_APP_API_URL +  image.img} />
+	)
 
+	//.filter(rev => rev.reviewId === review.selectedReview.id))
 
   return (
-    <Container className="d-flex justyfy-content-between mt-2">
+    <Container className="d-flex justyfy-content-between mt-3">
 			<Row className="d-flex flex-column" style={{width: '65vw'}}>
-				<h2>{review.selectedReview.name}</h2>
-				 <Card style={{height: '45vh', width: '65vw', overflow: "auto"}}>
+				<div className="d-flex">
+					<h3 className="mt-1">{review.selectedReview.name}</h3><h5 style={{margin: "0.8vw" }}>rating:</h5>
+					<h3 style={{margin: "0.25vw" }}>{rating}</h3>
+						<div className="d-flex justify-content-around mt-2">
+							{[1, 2, 3, 4, 5].map(rate => 
+								<div 
+									key={rate}
+									className="d-flex align-items-center justify-content-center" 
+									style={{background: `url(${star}) no-repeat center center `, width: "2vw", height: "2vw", backgroundSize: "cover",
+									color: "yellow", fontWeight: "bold"}}
+								>
+									o
+								</div>
+								)} 
+							</div>
+							<div style={{width: "10vw", background: "rgb(235, 240, 243)", marginLeft: `${(rating * 2 - 10)}vw`}}></div>
+						</div>	
+				 <Card style={{height: '45vh', width: '60vw', overflow: "auto"}}>
+					 <div className="d-flex justify-content-around">{imgs}
+
+					 </div>
 					{
 						review.selectedReview.name + " | " + review.selectedReview.authorRate + " | " + 
             new Date(review.selectedReview.createdAt).toUTCString().slice(4, -7) + " | " + 
@@ -54,16 +70,22 @@ const ReviewPage = observer(() => {
 					}						
         </Card> 
 				<h2 className="mt-2">Comments</h2>
-				<Card style={{height: '30vh', width: '65vw', overflow: "auto"}}>
+				<Card style={{height: '28vh', width: '60vw', overflow: "auto"}}>
 						{review.comments.filter(elem => elem.reviewId === review.selectedReview.id).map(com => 
-              <p key={com.id}>{com.text} author {user.users.reduce((res, elem) => elem.id === com.userId ? elem.name : res, '')}</p>)}
+              <div key={com.id}>
+								<div>{com.text}</div>
+								<p style={{display: "flex", justifyContent: "flex-end"}}> 
+									{user.users.reduce((res, one) => one.id === com.userId ? one.name : res, '')}
+									{new Date(com.createdAt).toUTCString().slice(4, -12)}.
+								</p> 
+							</div>
+						)}
 				</Card>
 			</Row>
-			<Row className="d-flex flex-column" style={{width: '30vw', marginLeft: "4vw"}}>
-				<h2 className="ml-5">{'About'}</h2>
+			<Row className="d-flex flex-column" style={{width: '30vw', marginLeft: "4vw", marginTop: 45}}>
 				<Card className="d-flex">
-					Author: {user.users.reduce((res, elem) => elem.id === review.selectedReview.userId ? elem.name : res, '')}
-          <br/>likes: {review.likes.filter(like => like.userId === userData.id).length}
+					Author: {user.users.reduce((res, one) => one.id === review.selectedReview.userId ? one.name : res, '')}
+          <br/>likes: {likes} 
 				</Card>
 				<Card className="d-flex">
 					Group: {review.groups.reduce((res, elem) => elem.id === review.selectedReview.groupId ? elem.name : res, '')}
@@ -71,9 +93,9 @@ const ReviewPage = observer(() => {
 				<Card className="d-flex">
 					Rating from the author: {review.selectedReview.authorRate}
 				</Card>
-				{/* <Card className="d-flex">
-					Tags: {'tags'}
-				</Card> */}
+				<Card className="d-flex"> 
+					Written: {new Date(review.selectedReview.createdAt).toUTCString().slice(4, -12)}
+				</Card>
 				{review.selectedReview.userId === userData.id ?
 					<Row className="d-flex flex-column">
 						<h2 className="mt-4">Rate the review</h2>

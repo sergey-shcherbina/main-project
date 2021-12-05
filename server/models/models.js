@@ -36,12 +36,8 @@ const Tag = sequelize.define('tag', {
 const Image = sequelize.define('image', {
   id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
 	order: {type: DataTypes.INTEGER, allowNull: false},
-	link: {type: DataTypes.STRING, allowNull: false}
+	img: {type: DataTypes.STRING, allowNull: false}
 })
-const ReviewTag = sequelize.define('review_tag', {
-	id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-})
-
 
 
 User.hasMany(Review)
@@ -71,8 +67,13 @@ Like.belongsTo(Review)
 Review.hasMany(Image)
 Image.belongsTo(Review)
 
-Review.belongsToMany(Tag, {through: ReviewTag })
-Tag.belongsToMany(Review, {through: ReviewTag })
+Review.hasMany(Tag)
+Tag.belongsTo(Review)
+
+
+
+// Review.belongsToMany(Tag, {through: ReviewTag })
+// Tag.belongsToMany(Review, {through: ReviewTag })
 
 
 module.exports = {
@@ -83,5 +84,5 @@ module.exports = {
   Comment,
   Like,
 	Image,
-	Tag	
+	Tag
 }

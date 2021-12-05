@@ -1,8 +1,8 @@
 import React, {useState, useContext} from "react"
-import {Modal, Form, Button, Container, Card} from "react-bootstrap"
+import {Modal, Button, Container, Card} from "react-bootstrap"
 import {TagCloud} from "react-tagcloud"
+// import {createReviewTag, fetchReviewTags} from "../../http/reviewAPI"
 import {Context} from "../../index"
-// import {createReviewTag} from "../../http/reviewAPI"
 
 const ShowTags = ({show, onHide}) => {
 	const {review} = useContext(Context) 
@@ -10,12 +10,13 @@ const ShowTags = ({show, onHide}) => {
 
 	let dataTags = []
   review.tags.forEach(tag => dataTags.push({id: tag.id, value: tag.word, count: Math.floor(Math.random() * 100)}))
-	console.log(dataTags)
-	// {tagId, reviewId}
-	console.log(tag.id, review.review)
+	// console.log(dataTags)
+	// console.log(tag.id) 
+  // console.log(review.selectedReview.id)
 	const addTag = () => {
-    // createReviewTag().then(data => {
-    // 	onHide()
+    // createReviewTag({tagId: tag.id, reviewId: review.selectedReview.id}).then(() => {
+    //   fetchReviewTags().then(data => review.setReviewTag(data))
+      onHide()
 		// })
   }
 	return (

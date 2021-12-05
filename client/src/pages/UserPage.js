@@ -4,6 +4,7 @@ import {observer} from "mobx-react-lite"
 import {Context} from "../index"
 import ListReviews from "../components/ListReviews"
 import CreateReview from "../components/modals/CreateReview"
+import AddImage from "../components/modals/AddImage"
 import EditReview from "../components/modals/EditReview"
 import {removeReview, fetchReviews} from "../http/reviewAPI"
 import {useNavigate} from "react-router-dom"
@@ -11,8 +12,8 @@ import jwt_decode from "jwt-decode"
 
 const UserPage = observer(() => {
 	const {review} = useContext(Context)
- const navigate = useNavigate()
- const userData = jwt_decode(localStorage.getItem("token"))
+  const navigate = useNavigate()
+  const userData = jwt_decode(localStorage.getItem("token"))
 
 	const deleteReview = () => {
 		removeReview(review.selectedReview.id).then(data => 
@@ -22,14 +23,20 @@ const UserPage = observer(() => {
 	const copy = review.reviews.filter(rev => rev.userId === userData.id)
 	const [reviewVisible, setReviewVisible] = useState(false)
 	const [editVisible, setEditVisible] = useState(false)
+  const [imageVisible, setImageVisible] = useState(false)
 	const drop =
 		<Dropdown drop="end">
-			<Dropdown.Toggle variant="outline-light" style={{border: "none"}} />
+			<Dropdown.Toggle variant="outline-light" size="lg" style={{border: "none"}} />
 				<Dropdown.Menu>
 					<Dropdown.Item 
 						onClick={() => setEditVisible(true)}
 					>
-						Edit.<br/>Add images and tags
+						Edit
+					</Dropdown.Item>
+          <Dropdown.Item 
+						onClick={() => setImageVisible(true)}
+					>
+						Add image
 					</Dropdown.Item> 
 					<Dropdown.Item 
 						onClick={deleteReview}	
@@ -91,6 +98,7 @@ const UserPage = observer(() => {
 			</div>
 			<ListReviews copy={copy} drop={drop} w="95vw" h="78vh" />
 			<CreateReview show={reviewVisible} onHide={() => setReviewVisible(false)} />
+      <AddImage show={imageVisible} onHide={() => setImageVisible(false)} />
 			<EditReview show={editVisible} onHide={() => setEditVisible(false)} />
 		</Container>
   )

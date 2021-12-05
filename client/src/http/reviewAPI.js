@@ -36,10 +36,6 @@ export const removeReview = async (id) => {
 //   const {data} = await $host.get('/review/' + id)
 //   return data
 // }
-// export const createReviewTag = async (tag, reviewId) => {
-//   const {data} = await $authHost.post("/review_tag", tagId, reviewId)
-//   return data
-// }
 export const createLike = async (like) => {
   const {data} = await $authHost.post("/like", like)
   return data
@@ -62,6 +58,14 @@ export const createComment = async (comment) => {
 }
 export const fetchComments = async (reviewId, userId) => {
   const {data} = await $authHost.get("/comment", {params: {reviewId, userId}})
+  return data
+}
+export const createImage = async (image) => {
+  const {data} = await $authHost.post("/image", image)
+  return data
+}
+export const fetchImages = async (reviewId, order) => {
+  const {data} = await $authHost.get("/image", {params: {reviewId, order}})
   return data
 }
 
