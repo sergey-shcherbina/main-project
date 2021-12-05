@@ -51,7 +51,7 @@ const ReviewPage = observer(() => {
 									key={rate}
 									className="d-flex align-items-center justify-content-center" 
 									style={{background: `url(${star}) no-repeat center center `, width: "2vw", height: "2vw", backgroundSize: "cover",
-									color: "yellow", fontWeight: "bold"}}
+									color: "yellow", fontWeight: "bold", fontSize: "1.7vw"}}
 								>
 									o
 								</div>
