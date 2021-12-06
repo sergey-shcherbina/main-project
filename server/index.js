@@ -9,14 +9,15 @@ const path = require('path')
 
 const PORT = process.env.PORT || 5000
 
-function cors(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET, PUT, PATCH, POST, DELETE");
-    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    next();
-}
+// function crs(req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Methods", "GET, PUT, PATCH, POST, DELETE");
+//     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+//     next();
+// }
 
 const app = express() 
+// app.use(crs())
 app.use(cors())
 app.use(express.json())
 app.use(express.static(path.resolve(__dirname, 'static')))

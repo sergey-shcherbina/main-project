@@ -1,18 +1,20 @@
 import React, {useState, useContext} from "react"
-import {Modal, Form, Button, Container} from "react-bootstrap"
+import {Modal, Form, Button} from "react-bootstrap"
 import {createTag, fetchTags} from "../../http/reviewAPI"
 import {Context} from "../../index"
+import {observer} from "mobx-react-lite"
 
-const CreateTag = ({show, onHide}) => {
+const CreateTag = observer(({show, onHide}) => {
 	const {review} = useContext(Context)
 	const [value, setValue] = useState("") 
 	console.log(review.selectedReview.id)
+	console.log(review.tags)
 	const addTag = () => {
 		createTag({word: value, reviewId: review.selectedReview.id}).then(() => {
 			fetchTags().then(data => review.setTags(data))
 			setValue("")
 			onHide()
-  	})
+  		})
 	}	
 	return (
 		<Modal show={show} onHide={onHide} centered>
@@ -35,7 +37,7 @@ const CreateTag = ({show, onHide}) => {
 				<Button variant="outline-success" onClick={addTag}>Add tag</Button>
 			</Modal.Footer>	
 		</Modal>
-  );
-};  
+  )
+})  
 
 export default CreateTag

@@ -47,5 +47,3 @@
 // };  
 
 // export default ShowTags
-// AWS_ACCESS_KEY_ID=AKIASCG3QX4H2IHGPXDL
-// AWS_SECRET_ACCESS_KEY=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

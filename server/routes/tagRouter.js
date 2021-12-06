@@ -8,7 +8,8 @@ const {word, reviewId} = req.body
   return res.json(tag)
 })
 router.get('/', async (req, res) => {
-  let {reviwId} = req.query
+  let {reviewId} = req.query
+  let tags
   if (!reviewId) {
 	  tags = await Tag.findAll()
   }

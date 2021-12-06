@@ -28,9 +28,15 @@ const Main = observer(() => {
     fetchRatings().then(data => review.setRatings(data))
     fetchImages().then(data => review.setImages(data))
   }, [])
+
+  console.log(review.selectedGroup)
+  console.log(review.images)
+  
+  console.log(review.tags)
+
   // const revCopy = [...review.reviews]
   let revCopy = Object.assign([], review.reviews)
-  console.log(review.selectedGroup)
+
   if (review.selectedGroup.id) {
     revCopy = revCopy.filter(rev => rev.groupId === review.selectedGroup.id)
   } 
@@ -38,7 +44,7 @@ const Main = observer(() => {
   // let revC = [...revCopy]
   rateCopy.map(rev => {rev.rating = (review.ratings.length && review.ratings.filter(rt => rt.reviewId === rev.id)
     .reduce((res, elem) => res + elem.rate, 0)/review.ratings.filter(rt => rt.reviewId === rev.id).length)})
-  const copyRate = revCopy.sort(function(a, b) {return b.rating - a.rating})
+  // const copyRate = revCopy.sort(function(a, b) {return b.rating - a.rating})
   const drop =
 		<Dropdown drop= "end">
 			<Dropdown.Toggle variant="outline-light" size = "lg" style={{border: "none"}} />
@@ -54,7 +60,7 @@ const Main = observer(() => {
   let dataTags = []
   review.tags.forEach(tag => dataTags.push({value: tag.word, count: Math.floor(Math.random() * 100)}))
 
-      // console.log(dataTags)
+       console.log(dataTags)
 
   return (
     <div className="d-flex flex-column align-items-center">  
@@ -82,7 +88,7 @@ const Main = observer(() => {
       </Container>
       <Container style={{overflow: "auto", maxHeight: "30vh", marginTop: "-10vh"}}>
         <TagCloud
-          key={Date.now}
+          // key={Date.now}
           minSize={25}
           maxSize={45}
           tags={dataTags}

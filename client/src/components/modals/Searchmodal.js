@@ -20,6 +20,7 @@ const Searchmodal = ({show, onHide, tag, data}) => {
       <Modal.Body>
         <Form>
 					<Form.Control
+            style={{color: "red", fontSize: 40, fontWeight: "bold"}}
 						value={value}
 						onChange={event => setValue(event.target.value)}
 						placeholder={tag || "Tag or word for search?"}

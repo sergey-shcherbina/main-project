@@ -13,7 +13,7 @@ export const createTag = async (tag) => {
   return data
 }
 export const fetchTags = async () => {
-  const {data} = await $host.get("/tag")
+  const {data} = await $authHost.get("/tag")
   return data
 }
 export const createReview = async (review) => {

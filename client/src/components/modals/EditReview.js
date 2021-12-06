@@ -6,16 +6,11 @@ import CreateTag from "./CreateTag"
 import jwt_decode from "jwt-decode"
 import {observer} from "mobx-react-lite"
 import {editReview, removeReview, fetchReviews, fetchOneReview} from "../../http/reviewAPI"
-// import {TagCloud} from "react-tagcloud"
+import {TagCloud} from "react-tagcloud"
 
 const EditReview = observer(({show, onHide}) => {
 	const {review} = useContext(Context)
 	let userData = jwt_decode(localStorage.getItem("token"))
-	
-	// console.log(review.selectedReview.name)
-	// console.log(review.selectedReview.text)
-	// console.log(review.selectedReview.authorRate)
-	
 	
 	const [groupVisible, setGroupVisible] = useState(false)
 	const [tagVisible, setTagVisible] = useState(false)
@@ -40,8 +35,7 @@ const EditReview = observer(({show, onHide}) => {
 			onHide()
 		})
 	}
-
-	// console.log(review.selectedReview)		
+	
  
 	return (
 		<Container>
