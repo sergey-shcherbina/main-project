@@ -37,7 +37,7 @@ const ReviewPage = observer(() => {
 		<Image key={image.id} width={150} height={200} src={process.env.REACT_APP_API_URL +  image.img} />
 	)
 
-	//.filter(rev => rev.reviewId === review.selectedReview.id))
+	//.filter(rev => rev.reviewId === review.selectedReview.id)) 
 
   return (
     <Container className="d-flex justyfy-content-between mt-3">
